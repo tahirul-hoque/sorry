@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Click me</title>
+<style>
+  :root {
+    --bg: #f6f4ef;
+    --fg: #1d1d1f;
+    --btn-bg: #1d1d1f;
+    --btn-fg: #f6f4ef;
+    --rain: #b3261e;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121212; --fg: #f2f0ea; --btn-bg: #f2f0ea; --btn-fg: #121212; --rain: #ff6b61;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121212; --fg: #f2f0ea; --btn-bg: #f2f0ea; --btn-fg: #121212; --rain: #ff6b61;
+    color-scheme: dark;
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); height: 100%; }
+  body {
+    margin: 0; height: 100%; background: var(--bg); color: var(--fg);
+    font-family: Georgia, "Times New Roman", serif; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  button {
+    position: relative; z-index: 2;
+    font: 600 1.25rem/1 system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 1rem 2rem; border: 0; border-radius: 999px; cursor: pointer;
+    background: var(--btn-bg); color: var(--btn-fg);
+    transition: transform .15s ease;
+  }
+  button:hover { transform: scale(1.05); }
+  button:active { transform: scale(.96); }
+  #rain { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 1; }
+  .drop {
+    position: absolute; top: -2rem; color: var(--rain); white-space: nowrap;
+    animation: fall linear forwards; will-change: transform;
+  }
+  @keyframes fall { to { transform: translateY(calc(100vh + 4rem)); } }
+</style>
+</head>
+<body>
+  <button id="btn" type="button">click me</button>
+  <div id="rain" aria-hidden="true"></div>
+<script>
+  var rain = document.getElementById("rain");
+  var started = false;
+  function drop() {
+    var el = document.createElement("span");
+    el.className = "drop";
+    el.textContent = "sorry 😭";
+    el.style.left = (Math.random() * 95) + "vw";
+    el.style.fontSize = (14 + Math.random() * 28) + "px";
+    el.style.opacity = (0.4 + Math.random() * 0.6).toFixed(2);
+    var dur = 3 + Math.random() * 4;
+    el.style.animationDuration = dur + "s";
+    el.addEventListener("animationend", function () { el.remove(); });
+    rain.appendChild(el);
+  }
+  document.getElementById("btn").addEventListener("click", function () {
+    if (started) return;
+    started = true;
+    this.style.display = "none";
+    setInterval(drop, 120);
+  });
+</script>
+</body>
+</html>
